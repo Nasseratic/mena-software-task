@@ -4,11 +4,12 @@ import {Router} from "express";
 export default class {
   constructor(model) {
     this.Model = model;
+    this._200 = _200;
+    this._404 = _404;
+    this._500 = _500;
     this.Router = Router();
-    this.router();
   }
   
- 
   create = (req, res) => {
     new this.Model(req.body)
       .save()
@@ -72,10 +73,11 @@ export default class {
       .catch(err => {
         _500(res,err);
       });
-  };
+  8};
 
   all = (req, res) => {
-    this.Model.find()
+    const {limit,offset} = req.query;
+    this.Model.find().skip(offset||0).limit(limit||50)
       .then(result => {
         _200(res,result);
       })
